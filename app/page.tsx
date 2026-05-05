@@ -1,26 +1,25 @@
 import MealsSection from "@/components/home/meals-section";
 import Hero from "@/components/home/hero";
-import { getMeals } from "@/lib/server-api";
+import { getCategories, getMeals } from "@/lib/server-api";
 
-export default async function HomePage({
-  searchParams
-}: {
-  searchParams: Promise<{
-    category?: string;
-    search?: string;
-  }>;
-}) {
-  const params = await searchParams; 
 
-  const data = await getMeals({
+export default async function HomePage({ searchParams }: any) {
+  const params = await searchParams;
+
+const [mealsRes, catRes] = await Promise.all([
+  getMeals({
     category: params.category,
-    search: params.search
-  });
+    search: params.search,
+    page: Number(params.page) || 1,
+  }),
+  getCategories(),
+]);
 
   return (
     <main className="min-h-screen bg-white dark:bg-black">
       <Hero />
-      <MealsSection meals={data.data || []} />
+      <MealsSection initialData={mealsRes.data}
+    categories={catRes.data} />
     </main>
   );
 }
