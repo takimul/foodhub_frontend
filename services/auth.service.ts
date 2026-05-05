@@ -2,10 +2,14 @@ import { api } from "@/lib/api";
 import { User } from "@/types/user";
 
 export const AuthService = {
-  getMe: () => api<{ data: User }>("/api/v1/auth/me"),
+  getMe: () =>
+    fetch("/api/v1/auth/me", {
+      credentials: "include"
+    }).then(res => res.json()),
 
   becomeProvider: () =>
-    api("/api/v1/auth/become-provider", {
-      method: "PATCH"
-    })
+    fetch("/api/v1/auth/become-provider", {
+      method: "PATCH",
+      credentials: "include"
+    }).then(res => res.json())
 };

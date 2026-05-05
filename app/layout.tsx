@@ -1,7 +1,6 @@
-import Navbar from "@/components/shared/navbar";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
-
+import Navbar from "@/components/shared/navbar";
 
 export default function RootLayout({
   children
