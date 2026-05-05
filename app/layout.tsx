@@ -1,10 +1,7 @@
-import type { Metadata } from "next";
+import Navbar from "@/components/shared/navbar";
 import "./globals.css";
+import { ThemeProvider } from "@/components/theme-provider";
 
-export const metadata: Metadata = {
-  title: "FoodHub",
-  description: "Food ordering platform"
-};
 
 export default function RootLayout({
   children
@@ -12,9 +9,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body className="bg-gray-50 text-gray-900">
-        {children}
+    <html lang="en" suppressHydrationWarning>
+      <body className="bg-white dark:bg-black text-black dark:text-white transition-colors duration-300">
+        <ThemeProvider>
+          <Navbar />
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   );
