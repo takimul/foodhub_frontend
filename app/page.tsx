@@ -1,15 +1,26 @@
-import { api } from "@/lib/api";
+import MealsSection from "@/components/home/meals-section";
+import Hero from "@/components/home/hero";
+import { getMeals } from "@/lib/server-api";
 
-export default async function HomePage() {
-  const data = await api<any>("/api/v1/meals");
+export default async function HomePage({
+  searchParams
+}: {
+  searchParams: Promise<{
+    category?: string;
+    search?: string;
+  }>;
+}) {
+  const params = await searchParams; 
+
+  const data = await getMeals({
+    category: params.category,
+    search: params.search
+  });
 
   return (
-    <div className="p-6">
-      <h1 className="text-xl font-bold mb-4">Meals</h1>
-
-      {data?.data?.map((meal: any) => (
-        <div key={meal.id}>{meal.title}</div>
-      ))}
-    </div>
+    <main className="min-h-screen bg-white dark:bg-black">
+      <Hero />
+      <MealsSection meals={data.data || []} />
+    </main>
   );
 }
