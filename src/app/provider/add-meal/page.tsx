@@ -20,7 +20,7 @@ export default function AddMealPage() {
     imageUrl: "",
   });
 
-  // LOAD CATEGORIES
+  
   useEffect(() => {
     const loadCategories =
       async () => {
@@ -46,7 +46,7 @@ export default function AddMealPage() {
 
   const handleSubmit = async () => {
     try {
-      // VALIDATION
+      
       if (
         !form.title ||
         !form.description ||

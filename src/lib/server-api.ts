@@ -47,3 +47,15 @@ export async function getCategories() {
 
   return res.json();
 } 
+
+export const getProviders =
+  async () => {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/v1/providers`,
+      {
+        cache: "no-store",
+      }
+    );
+
+    return res.json();
+  };
