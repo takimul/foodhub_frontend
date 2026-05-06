@@ -22,13 +22,15 @@ export default async function MealDetailsPage({
         
         {/* IMAGE */}
         <div className="relative aspect-square rounded-3xl overflow-hidden bg-gray-100 dark:bg-zinc-900">
-          {meal.image ? (
-            <Image
-              src={meal.image}
-              alt={meal.title}
-              fill
-              className="object-cover"
-            />
+          {meal.imageUrl ? (
+            
+            <img
+                src={
+                  meal.imageUrl
+                }
+                alt={meal.title}
+                className="object-cover"
+              />
           ) : (
             <div className="w-full h-full flex items-center justify-center text-gray-400">
               No Image

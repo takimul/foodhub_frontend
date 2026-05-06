@@ -18,7 +18,7 @@ export default function CheckoutPage() {
 
   const handleOrder = async () => {
     try {
-      // ✅ validation
+      
       if (!form.address.trim()) {
         alert("Address is required");
         return;

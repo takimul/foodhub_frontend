@@ -20,9 +20,7 @@ export async function getMeals({
 
   return res.json();
 }
-
-//catergory
-
+ 
 export async function getCategories() {
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}/api/v1/categories`,
@@ -35,9 +33,7 @@ export async function getCategories() {
 
   return res.json();
 }
-
-// meal details
-export async function getMeal(id: string) {
+ export async function getMeal(id: string) {
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}/api/v1/meals/${id}`,
     {

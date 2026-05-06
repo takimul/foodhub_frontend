@@ -17,7 +17,7 @@ export default function CategoryFilter({ categories }: any) {
       query.set("category", slug);
     }
 
-    query.delete("page"); // 🔥 reset pagination
+    query.delete("page"); 
 
     router.push(`/?${query.toString()}`);
   };

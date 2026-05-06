@@ -14,7 +14,7 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  // 🔥 redirect if already logged in
+  
   useEffect(() => {
     if (!authLoading && user) {
       router.push("/");
