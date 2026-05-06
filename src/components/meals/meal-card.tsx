@@ -1,6 +1,6 @@
 "use client";
 
-import { Meal } from "@/types/meal";
+import { Meal } from "@/src/types/meal";
 import { motion } from "framer-motion";
 import Link from "next/link";
 

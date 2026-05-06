@@ -1,7 +1,7 @@
-import { getMeal } from "@/lib/server-api";
+import { getMeal } from "@/src/lib/server-api";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import AddToCartButton from "@/components/cart/add-to-cart-button";
+import AddToCartButton from "@/src/components/cart/add-to-cart-button";
 
 export default async function MealDetailsPage({
   params,

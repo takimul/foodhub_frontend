@@ -1,6 +1,6 @@
 "use client";
 
-import { Meal } from "@/types/meal";
+import { Meal } from "@/src/types/meal";
 import MealCard from "./meal-card";
 
 export default function MealsGrid({ meals }: { meals: Meal[] }) {

@@ -25,7 +25,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import MealCard from "@/components/meals/meal-card";
+import MealCard from "@/src/components/meals/meal-card";
 import { useSearchParams } from "next/navigation";
 import CategoryFilter from "./category-filter";
 

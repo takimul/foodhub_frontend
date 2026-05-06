@@ -1,6 +1,3 @@
-import { api } from "@/lib/api";
-import { User } from "@/types/user";
-
 export const AuthService = {
   getMe: () =>
     fetch("/api/v1/auth/me", {

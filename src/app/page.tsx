@@ -1,6 +1,6 @@
-import MealsSection from "@/components/home/meals-section";
-import Hero from "@/components/home/hero";
-import { getCategories, getMeals } from "@/lib/server-api";
+import MealsSection from "@/src/components/home/meals-section";
+import Hero from "@/src/components/home/hero";
+import { getCategories, getMeals } from "@/src/lib/server-api";
 
 
 export default async function HomePage({ searchParams }: any) {

@@ -1,14 +1,24 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { useCartStore } from "@/src/store/cart-store";
 
 export default function AddToCartButton({
   meal,
 }: {
   meal: any;
 }) {
+  const addItem = useCartStore(
+    (state) => state.addItem
+  );
+
   const handleAdd = () => {
-    console.log("Added to cart", meal);
+    addItem({
+      id: meal.id,
+      title: meal.title,
+      price: meal.price,
+      image: meal.image,
+    });
   };
 
   return (
