@@ -35,3 +35,19 @@ export async function getCategories() {
 
   return res.json();
 }
+
+// meal details
+export async function getMeal(id: string) {
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/api/v1/meals/${id}`,
+    {
+      cache: "no-store",
+    }
+  );
+
+  if (!res.ok) {
+    throw new Error("Failed to fetch meal");
+  }
+
+  return res.json();
+} 

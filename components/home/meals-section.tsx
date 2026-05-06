@@ -29,7 +29,10 @@ import MealCard from "@/components/meals/meal-card";
 import { useSearchParams } from "next/navigation";
 import CategoryFilter from "./category-filter";
 
-export default function MealsSection({ initialData }: any) {
+export default function MealsSection({
+  initialData,
+  categories,
+}: any) {
   const params = useSearchParams();
 
   const [meals, setMeals] = useState(initialData.meals);
@@ -38,7 +41,7 @@ export default function MealsSection({ initialData }: any) {
   const [loading, setLoading] = useState(false);
 
   const observerRef = useRef<HTMLDivElement | null>(null);
-  const isFetchingRef = useRef(false); // 🚫 prevent duplicate calls
+  const isFetchingRef = useRef(false); 
 
   const hasMore = page < totalPages;
 
@@ -49,7 +52,7 @@ export default function MealsSection({ initialData }: any) {
     setTotalPages(initialData.totalPages);
   }, [initialData]);
 
-  // 🔥 LOAD MORE FUNCTION
+  
   const loadMore = async () => {
     if (!hasMore || loading || isFetchingRef.current) return;
 
@@ -86,7 +89,7 @@ export default function MealsSection({ initialData }: any) {
         }
       },
       {
-        rootMargin: "200px", // 🔥 preload before reaching bottom
+        rootMargin: "200px", 
       }
     );
 
@@ -95,13 +98,13 @@ export default function MealsSection({ initialData }: any) {
     return () => {
       observer.disconnect();
     };
-  }, [page, totalPages, params]); // 👈 reacts to filter changes
+  }, [page, totalPages, params]); 
 
   return (
     <section className="px-6 pb-12 max-w-7xl mx-auto space-y-6">
       <h2 className="text-xl font-semibold">Meals</h2>
 
-      <CategoryFilter />
+      <CategoryFilter categories={categories} />
 
       {meals.length === 0 ? (
         <p className="text-gray-500 text-center">No meals found</p>
@@ -113,7 +116,7 @@ export default function MealsSection({ initialData }: any) {
             ))}
           </div>
 
-          {/* 🔥 LOAD MORE TRIGGER */}
+          
           {hasMore && (
             <div
               ref={observerRef}

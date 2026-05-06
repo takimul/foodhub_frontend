@@ -2,6 +2,7 @@
 
 import { Meal } from "@/types/meal";
 import { motion } from "framer-motion";
+import Link from "next/link";
 
 export default function MealCard({ meal }: { meal: Meal }) {
   return (
@@ -9,6 +10,7 @@ export default function MealCard({ meal }: { meal: Meal }) {
       whileHover={{ y: -6 }}
      className="rounded-2xl border dark:border-gray-800 overflow-hidden bg-white dark:bg-neutral-900 shadow-sm hover:shadow-xl transition duration-300"
     >
+      <Link href={`/meals/${meal.id}`}>
       {/* IMAGE */}
       <div className="h-40 bg-gray-200 dark:bg-gray-800">
         {meal.imageUrl && (
@@ -38,6 +40,7 @@ export default function MealCard({ meal }: { meal: Meal }) {
           </span>
         </div>
       </div>
+      </Link>
     </motion.div>
   );
 }

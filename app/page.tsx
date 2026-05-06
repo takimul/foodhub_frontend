@@ -14,6 +14,7 @@ const [mealsRes, catRes] = await Promise.all([
   }),
   getCategories(),
 ]);
+console.log("category", catRes);
 
   return (
     <main className="min-h-screen bg-white dark:bg-black">
