@@ -1,21 +1,75 @@
 export async function getMeals({
   category,
   search,
-  page = 1
+  cuisine,
+  dietary,
+  minPrice,
+  maxPrice,
+  page = 1,
 }: {
   category?: string;
   search?: string;
+  cuisine?: string;
+  dietary?: string;
+  minPrice?: string;
+  maxPrice?: string;
   page?: number;
 }) {
-  const params = new URLSearchParams();
+  const params =
+    new URLSearchParams();
 
-  if (category) params.append("category", category);
-  if (search) params.append("search", search);
-  params.append("page", String(page));
+  if (category) {
+    params.append(
+      "category",
+      category
+    );
+  }
+
+  if (search) {
+    params.append(
+      "search",
+      search
+    );
+  }
+
+  if (cuisine) {
+    params.append(
+      "cuisine",
+      cuisine
+    );
+  }
+
+  if (dietary) {
+    params.append(
+      "dietary",
+      dietary
+    );
+  }
+
+  if (minPrice) {
+    params.append(
+      "minPrice",
+      minPrice
+    );
+  }
+
+  if (maxPrice) {
+    params.append(
+      "maxPrice",
+      maxPrice
+    );
+  }
+
+  params.append(
+    "page",
+    String(page)
+  );
 
   const res = await fetch(
-    `http://localhost:3000/api/v1/meals?${params.toString()}`,
-    { cache: "no-store" }
+    `${process.env.NEXT_PUBLIC_API_URL}/api/v1/meals?${params.toString()}`,
+    {
+      cache: "no-store",
+    }
   );
 
   return res.json();

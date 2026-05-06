@@ -1,14 +1,12 @@
-                    "use client";
+"use client";
 
 import { useEffect, useRef, useState } from "react";
 import MealCard from "@/src/components/meals/meal-card";
 import { useSearchParams } from "next/navigation";
 import CategoryFilter from "./category-filter";
+import AdvancedFilters from "./advanced-filters";
 
-export default function MealsSection({
-  initialData,
-  categories,
-}: any) {
+export default function MealsSection({ initialData, categories }: any) {
   const params = useSearchParams();
 
   const [meals, setMeals] = useState(initialData.meals);
@@ -17,16 +15,15 @@ export default function MealsSection({
   const [loading, setLoading] = useState(false);
 
   const observerRef = useRef<HTMLDivElement | null>(null);
-  const isFetchingRef = useRef(false); 
+  const isFetchingRef = useRef(false);
 
   const hasMore = page < totalPages;
-   useEffect(() => {
+  useEffect(() => {
     setMeals(initialData.meals);
     setPage(initialData.page);
     setTotalPages(initialData.totalPages);
   }, [initialData]);
 
-  
   const loadMore = async () => {
     if (!hasMore || loading || isFetchingRef.current) return;
 
@@ -50,7 +47,7 @@ export default function MealsSection({
       isFetchingRef.current = false;
     }
   };
-   useEffect(() => {
+  useEffect(() => {
     const el = observerRef.current;
     if (!el) return;
 
@@ -61,8 +58,8 @@ export default function MealsSection({
         }
       },
       {
-        rootMargin: "200px", 
-      }
+        rootMargin: "200px",
+      },
     );
 
     observer.observe(el);
@@ -70,13 +67,14 @@ export default function MealsSection({
     return () => {
       observer.disconnect();
     };
-  }, [page, totalPages, params]); 
+  }, [page, totalPages, params]);
 
   return (
     <section className="px-6 pb-12 max-w-7xl mx-auto space-y-6">
       <h2 className="text-xl font-semibold">Meals</h2>
 
       <CategoryFilter categories={categories} />
+      <AdvancedFilters />
 
       {meals.length === 0 ? (
         <p className="text-gray-500 text-center">No meals found</p>
@@ -88,7 +86,6 @@ export default function MealsSection({
             ))}
           </div>
 
-          
           {hasMore && (
             <div
               ref={observerRef}

@@ -6,28 +6,20 @@ import ProvidersSection from "@/src/components/home/providers-section";
 
 import WhyChooseUs from "@/src/components/home/why-choose-us";
 
-import {
-  getCategories,
-  getMeals,
-  getProviders,
-} from "@/src/lib/server-api";
+import { getCategories, getMeals, getProviders } from "@/src/lib/server-api";
 
-export default async function HomePage({
-  searchParams,
-}: any) {
+export default async function HomePage({ searchParams }: any) {
   const params = await searchParams;
 
-  const [
-    mealsRes,
-    catRes,
-    providersRes,
-  ] = await Promise.all([
+  const [mealsRes, catRes, providersRes] = await Promise.all([
     getMeals({
       category: params.category,
       search: params.search,
-      page:
-        Number(params.page) ||
-        1,
+      cuisine: params.cuisine,
+      dietary: params.dietary,
+      minPrice: params.minPrice,
+      maxPrice: params.maxPrice,
+      page: Number(params.page) || 1,
     }),
 
     getCategories(),
@@ -37,26 +29,17 @@ export default async function HomePage({
 
   return (
     <main className="min-h-screen bg-white dark:bg-black">
-
       {/* HERO */}
       <Hero />
 
       {/* MEALS */}
-      <MealsSection
-        initialData={mealsRes.data}
-        categories={catRes.data}
-      />
+      <MealsSection initialData={mealsRes.data} categories={catRes.data} />
 
       {/* PROVIDERS */}
-      <ProvidersSection
-        providers={
-          providersRes.data
-        }
-      />
+      <ProvidersSection providers={providersRes.data} />
 
       {/* EXTRA SECTION */}
-      <WhyChooseUs/>
-
+      <WhyChooseUs />
     </main>
   );
 }

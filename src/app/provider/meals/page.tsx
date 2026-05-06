@@ -5,32 +5,25 @@ import { useEffect, useState } from "react";
 
 export default function ProviderMealsPage() {
   const [meals, setMeals] = useState<any[]>([]);
-  const [categories, setCategories] =
-    useState<any[]>([]);
+  const [categories, setCategories] = useState<any[]>([]);
 
-  const [loading, setLoading] =
-    useState(true);
-   const [editingMeal, setEditingMeal] =
-    useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [editingMeal, setEditingMeal] = useState<any>(null);
 
-  const [editLoading, setEditLoading] =
-    useState(false);
+  const [editLoading, setEditLoading] = useState(false);
 
-  const [editForm, setEditForm] =
-    useState({
-      title: "",
-      description: "",
-      price: "",
-      categoryId: "",
-      imageUrl: "",
-    });
-   const loadMeals = async () => {
+  const [editForm, setEditForm] = useState({
+    title: "",
+    description: "",
+    price: "",
+    categoryId: "",
+    imageUrl: "",
+    cuisine: "",
+    dietary: "",
+  });
+  const loadMeals = async () => {
     try {
-      const [
-        mealsRes,
-        providerRes,
-        categoriesRes,
-      ] = await Promise.all([
+      const [mealsRes, providerRes, categoriesRes] = await Promise.all([
         fetch("/api/v1/meals"),
 
         fetch("/api/v1/providers/me", {
@@ -40,31 +33,21 @@ export default function ProviderMealsPage() {
         fetch("/api/v1/categories"),
       ]);
 
-      const mealsData =
-        await mealsRes.json();
+      const mealsData = await mealsRes.json();
 
-      const providerData =
-        await providerRes.json();
+      const providerData = await providerRes.json();
 
-      const categoriesData =
-        await categoriesRes.json();
+      const categoriesData = await categoriesRes.json();
 
-      setCategories(
-        categoriesData.data || []
+      setCategories(categoriesData.data || []);
+
+      const provider = providerData.data;
+
+      const providerMeals = mealsData.data.meals.filter(
+        (meal: any) => meal.provider?.restaurant === provider.restaurant,
       );
 
-      const provider =
-        providerData.data;
-
-      const providerMeals =
-        mealsData.data.meals.filter(
-          (meal: any) =>
-            meal.provider?.restaurant ===
-            provider.restaurant
-        );
-
       setMeals(providerMeals);
-
     } catch (err) {
       console.error(err);
     } finally {
@@ -75,65 +58,47 @@ export default function ProviderMealsPage() {
   useEffect(() => {
     loadMeals();
   }, []);
-   const handleDelete = async (
-    id: string
-  ) => {
-    const ok = confirm(
-      "Delete this meal?"
-    );
+  const handleDelete = async (id: string) => {
+    const ok = confirm("Delete this meal?");
 
     if (!ok) return;
 
     try {
-      await fetch(
-        `/api/v1/meals/provider/${id}`,
-        {
-          method: "DELETE",
-          credentials: "include",
-        }
-      );
+      await fetch(`/api/v1/meals/provider/${id}`, {
+        method: "DELETE",
+        credentials: "include",
+      });
 
       loadMeals();
-
     } catch (err) {
       console.error(err);
     }
   };
-   const handleUpdate = async () => {
+  const handleUpdate = async () => {
     try {
       setEditLoading(true);
 
-      const res = await fetch(
-        `/api/v1/meals/provider/${editingMeal.id}`,
-        {
-          method: "PATCH",
-          credentials: "include",
-          headers: {
-            "Content-Type":
-              "application/json",
-          },
-          body: JSON.stringify({
-            title: editForm.title,
-            description:
-              editForm.description,
-            price: Number(
-              editForm.price
-            ),
-            categoryId:
-              editForm.categoryId,
-            imageUrl:
-              editForm.imageUrl,
-          }),
-        }
-      );
+      const res = await fetch(`/api/v1/meals/provider/${editingMeal.id}`, {
+        method: "PATCH",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          title: editForm.title,
+          description: editForm.description,
+          price: Number(editForm.price),
+          categoryId: editForm.categoryId,
+          imageUrl: editForm.imageUrl,
+          cuisine: editForm.cuisine,
+          dietary: editForm.dietary,
+        }),
+      });
 
       const data = await res.json();
 
       if (!res.ok) {
-        alert(
-          data.message ||
-            "Update failed"
-        );
+        alert(data.message || "Update failed");
 
         return;
       }
@@ -141,7 +106,6 @@ export default function ProviderMealsPage() {
       setEditingMeal(null);
 
       loadMeals();
-
     } catch (err) {
       console.error(err);
     } finally {
@@ -150,28 +114,17 @@ export default function ProviderMealsPage() {
   };
 
   if (loading) {
-    return (
-      <div className="p-10">
-        Loading meals...
-      </div>
-    );
+    return <div className="p-10">Loading meals...</div>;
   }
 
   return (
     <main className="space-y-8">
-
       {/* HEADER */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-
         <div>
-          <h1 className="text-3xl font-bold">
-            My Meals
-          </h1>
+          <h1 className="text-3xl font-bold">My Meals</h1>
 
-          <p className="text-gray-500 mt-2">
-            Manage your restaurant
-            meals
-          </p>
+          <p className="text-gray-500 mt-2">Manage your restaurant meals</p>
         </div>
 
         <Link
@@ -185,15 +138,9 @@ export default function ProviderMealsPage() {
       {/* EMPTY */}
       {meals.length === 0 ? (
         <div className="border rounded-3xl p-12 text-center dark:border-zinc-800">
+          <h2 className="text-2xl font-bold">No meals added yet</h2>
 
-          <h2 className="text-2xl font-bold">
-            No meals added yet
-          </h2>
-
-          <p className="text-gray-500 mt-2">
-            Start by adding your first
-            meal
-          </p>
+          <p className="text-gray-500 mt-2">Start by adding your first meal</p>
 
           <Link
             href="/provider/add-meal"
@@ -204,7 +151,6 @@ export default function ProviderMealsPage() {
         </div>
       ) : (
         <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-6">
-
           {meals.map((meal) => (
             <div
               key={meal.id}
@@ -212,35 +158,23 @@ export default function ProviderMealsPage() {
             >
               {/* IMAGE */}
               <img
-                src={
-                  meal.imageUrl ||
-                  "https://placehold.co/600x400"
-                }
+                src={meal.imageUrl || "https://placehold.co/600x400"}
                 alt={meal.title}
                 className="w-full h-56 object-cover"
               />
 
               {/* CONTENT */}
               <div className="p-5 space-y-4">
-
                 <div className="flex items-start justify-between gap-3">
-
                   <div>
-                    <h2 className="text-xl font-bold">
-                      {meal.title}
-                    </h2>
+                    <h2 className="text-xl font-bold">{meal.title}</h2>
 
                     <p className="text-sm text-gray-500 mt-1">
-                      {
-                        meal.category
-                          ?.name
-                      }
+                      {meal.category?.name}
                     </p>
                   </div>
 
-                  <span className="font-bold text-lg">
-                    ৳{meal.price}
-                  </span>
+                  <span className="font-bold text-lg">৳{meal.price}</span>
                 </div>
 
                 <p className="text-sm text-gray-500 line-clamp-3">
@@ -249,25 +183,18 @@ export default function ProviderMealsPage() {
 
                 {/* ACTIONS */}
                 <div className="flex gap-3">
-
                   <button
                     onClick={() => {
-                      setEditingMeal(
-                        meal
-                      );
+                      setEditingMeal(meal);
 
                       setEditForm({
-                        title:
-                          meal.title,
-                        description:
-                          meal.description,
-                        price:
-                          meal.price,
-                        categoryId:
-                          meal.categoryId,
-                        imageUrl:
-                          meal.imageUrl ||
-                          "",
+                        title: meal.title,
+                        description: meal.description,
+                        price: meal.price,
+                        categoryId: meal.categoryId,
+                        imageUrl: meal.imageUrl || "",
+                        cuisine: meal.cuisine || "",
+                        dietary: meal.dietary || "",
                       });
                     }}
                     className="flex-1 border dark:border-zinc-700 rounded-2xl py-2 hover:bg-zinc-100 dark:hover:bg-zinc-900 transition"
@@ -276,16 +203,11 @@ export default function ProviderMealsPage() {
                   </button>
 
                   <button
-                    onClick={() =>
-                      handleDelete(
-                        meal.id
-                      )
-                    }
+                    onClick={() => handleDelete(meal.id)}
                     className="flex-1 rounded-2xl py-2 bg-red-500 text-white hover:opacity-90 transition"
                   >
                     Delete
                   </button>
-
                 </div>
               </div>
             </div>
@@ -296,23 +218,11 @@ export default function ProviderMealsPage() {
       {/* EDIT MODAL */}
       {editingMeal && (
         <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-6">
-
           <div className="w-full max-w-2xl bg-white dark:bg-zinc-950 rounded-3xl p-6 space-y-5">
-
             <div className="flex items-center justify-between">
-              <h2 className="text-2xl font-bold">
-                Edit Meal
-              </h2>
+              <h2 className="text-2xl font-bold">Edit Meal</h2>
 
-              <button
-                onClick={() =>
-                  setEditingMeal(
-                    null
-                  )
-                }
-              >
-                ✕
-              </button>
+              <button onClick={() => setEditingMeal(null)}>✕</button>
             </div>
 
             <input
@@ -320,8 +230,7 @@ export default function ProviderMealsPage() {
               onChange={(e) =>
                 setEditForm({
                   ...editForm,
-                  title:
-                    e.target.value,
+                  title: e.target.value,
                 })
               }
               placeholder="Title"
@@ -329,15 +238,11 @@ export default function ProviderMealsPage() {
             />
 
             <textarea
-              value={
-                editForm.description
-              }
+              value={editForm.description}
               onChange={(e) =>
                 setEditForm({
                   ...editForm,
-                  description:
-                    e.target
-                      .value,
+                  description: e.target.value,
                 })
               }
               rows={4}
@@ -346,18 +251,13 @@ export default function ProviderMealsPage() {
             />
 
             <div className="grid md:grid-cols-2 gap-4">
-
               <input
                 type="number"
-                value={
-                  editForm.price
-                }
+                value={editForm.price}
                 onChange={(e) =>
                   setEditForm({
                     ...editForm,
-                    price:
-                      e.target
-                        .value,
+                    price: e.target.value,
                   })
                 }
                 placeholder="Price"
@@ -365,47 +265,73 @@ export default function ProviderMealsPage() {
               />
 
               <select
-                value={
-                  editForm.categoryId
-                }
+                value={editForm.categoryId}
                 onChange={(e) =>
                   setEditForm({
                     ...editForm,
-                    categoryId:
-                      e.target
-                        .value,
+                    categoryId: e.target.value,
                   })
                 }
                 className="border dark:border-zinc-800 rounded-2xl p-4 bg-transparent"
               >
-                {categories.map(
-                  (cat) => (
-                    <option
-                      key={
-                        cat.id
-                      }
-                      value={
-                        cat.id
-                      }
-                    >
-                      {cat.name}
-                    </option>
-                  )
-                )}
+                {categories.map((cat) => (
+                  <option key={cat.id} value={cat.id}>
+                    {cat.name}
+                  </option>
+                ))}
               </select>
 
+              <div className="grid md:grid-cols-2 gap-4">
+                <select
+                  value={editForm.cuisine}
+                  onChange={(e) =>
+                    setEditForm({
+                      ...editForm,
+                      cuisine: e.target.value,
+                    })
+                  }
+                  className="border dark:border-zinc-800 rounded-2xl p-4 bg-transparent"
+                >
+                  <option value="">Select Cuisine</option>
+
+                  <option value="Bangladeshi">Bangladeshi</option>
+
+                  <option value="Chinese">Chinese</option>
+
+                  <option value="Italian">Italian</option>
+
+                  <option value="Indian">Indian</option>
+                </select>
+
+                <select
+                  value={editForm.dietary}
+                  onChange={(e) =>
+                    setEditForm({
+                      ...editForm,
+                      dietary: e.target.value,
+                    })
+                  }
+                  className="border dark:border-zinc-800 rounded-2xl p-4 bg-transparent"
+                >
+                  <option value="">Dietary Preference</option>
+
+                  <option value="Halal">Halal</option>
+
+                  <option value="Vegan">Vegan</option>
+
+                  <option value="Vegetarian">Vegetarian</option>
+
+                  <option value="Gluten Free">Gluten Free</option>
+                </select>
+              </div>
             </div>
 
             <input
-              value={
-                editForm.imageUrl
-              }
+              value={editForm.imageUrl}
               onChange={(e) =>
                 setEditForm({
                   ...editForm,
-                  imageUrl:
-                    e.target
-                      .value,
+                  imageUrl: e.target.value,
                 })
               }
               placeholder="Image URL"
@@ -415,41 +341,27 @@ export default function ProviderMealsPage() {
             {/* PREVIEW */}
             {editForm.imageUrl && (
               <img
-                src={
-                  editForm.imageUrl
-                }
+                src={editForm.imageUrl}
                 alt="preview"
                 className="w-full h-60 object-cover rounded-2xl"
               />
             )}
 
             <div className="flex gap-3">
-
               <button
-                onClick={() =>
-                  setEditingMeal(
-                    null
-                  )
-                }
+                onClick={() => setEditingMeal(null)}
                 className="flex-1 border dark:border-zinc-800 rounded-2xl py-3"
               >
                 Cancel
               </button>
 
               <button
-                onClick={
-                  handleUpdate
-                }
-                disabled={
-                  editLoading
-                }
+                onClick={handleUpdate}
+                disabled={editLoading}
                 className="flex-1 rounded-2xl py-3 bg-black text-white dark:bg-white dark:text-black"
               >
-                {editLoading
-                  ? "Saving..."
-                  : "Save Changes"}
+                {editLoading ? "Saving..." : "Save Changes"}
               </button>
-
             </div>
           </div>
         </div>

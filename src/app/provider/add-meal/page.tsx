@@ -6,11 +6,9 @@ import { useRouter } from "next/navigation";
 export default function AddMealPage() {
   const router = useRouter();
 
-  const [categories, setCategories] =
-    useState<any[]>([]);
+  const [categories, setCategories] = useState<any[]>([]);
 
-  const [loading, setLoading] =
-    useState(false);
+  const [loading, setLoading] = useState(false);
 
   const [form, setForm] = useState({
     title: "",
@@ -18,44 +16,30 @@ export default function AddMealPage() {
     price: "",
     categoryId: "",
     imageUrl: "",
+    cuisine: "",
+    dietary: "",
   });
 
-  
   useEffect(() => {
-    const loadCategories =
-      async () => {
-        try {
-          const res = await fetch(
-            "/api/v1/categories"
-          );
+    const loadCategories = async () => {
+      try {
+        const res = await fetch("/api/v1/categories");
 
-          const data =
-            await res.json();
+        const data = await res.json();
 
-          setCategories(
-            data.data || []
-          );
-
-        } catch (err) {
-          console.error(err);
-        }
-      };
+        setCategories(data.data || []);
+      } catch (err) {
+        console.error(err);
+      }
+    };
 
     loadCategories();
   }, []);
 
   const handleSubmit = async () => {
     try {
-      
-      if (
-        !form.title ||
-        !form.description ||
-        !form.price ||
-        !form.categoryId
-      ) {
-        alert(
-          "Please fill all required fields"
-        );
+      if (!form.title || !form.description || !form.price || !form.categoryId) {
+        alert("Please fill all required fields");
 
         return;
       }
@@ -64,56 +48,38 @@ export default function AddMealPage() {
 
       const payload = {
         title: form.title,
-        description:
-          form.description,
+        description: form.description,
         price: Number(form.price),
-        categoryId:
-          form.categoryId,
-        imageUrl:
-          form.imageUrl || undefined,
+        categoryId: form.categoryId,
+        imageUrl: form.imageUrl || undefined,
+        cuisine: form.cuisine,
+        dietary: form.dietary,
       };
 
-      const res = await fetch(
-        "/api/v1/meals/provider",
-        {
-          method: "POST",
-          credentials: "include",
-          headers: {
-            "Content-Type":
-              "application/json",
-          },
-          body: JSON.stringify(
-            payload
-          ),
-        }
-      );
+      const res = await fetch("/api/v1/meals/provider", {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
 
       const data = await res.json();
 
       if (!res.ok) {
-        throw new Error(
-          data.message ||
-            "Failed to create meal"
-        );
+        throw new Error(data.message || "Failed to create meal");
       }
 
-      alert(
-        "Meal added successfully"
-      );
+      alert("Meal added successfully");
 
-      router.push(
-        "/provider/meals"
-      );
+      router.push("/provider/meals");
 
       router.refresh();
-
     } catch (err: any) {
       console.error(err);
 
-      alert(
-        err.message ||
-          "Something went wrong"
-      );
+      alert(err.message || "Something went wrong");
     } finally {
       setLoading(false);
     }
@@ -121,37 +87,28 @@ export default function AddMealPage() {
 
   return (
     <main className="min-h-screen bg-white dark:bg-black text-black dark:text-white">
-
       <section className="max-w-3xl mx-auto px-6 py-10 space-y-8">
-
         {/* HEADER */}
         <div>
-          <h1 className="text-4xl font-bold">
-            Add New Meal
-          </h1>
+          <h1 className="text-4xl font-bold">Add New Meal</h1>
 
           <p className="text-gray-500 mt-2">
-            Create a new food item
-            for your restaurant
+            Create a new food item for your restaurant
           </p>
         </div>
 
         {/* FORM */}
         <div className="border rounded-3xl p-6 dark:border-zinc-800 space-y-5">
-
           {/* TITLE */}
           <div className="space-y-2">
-            <label className="text-sm text-gray-500">
-              Meal Title
-            </label>
+            <label className="text-sm text-gray-500">Meal Title</label>
 
             <input
               value={form.title}
               onChange={(e) =>
                 setForm({
                   ...form,
-                  title:
-                    e.target.value,
+                  title: e.target.value,
                 })
               }
               placeholder="Chicken Burger"
@@ -161,9 +118,7 @@ export default function AddMealPage() {
 
           {/* DESCRIPTION */}
           <div className="space-y-2">
-            <label className="text-sm text-gray-500">
-              Description
-            </label>
+            <label className="text-sm text-gray-500">Description</label>
 
             <textarea
               rows={5}
@@ -171,8 +126,7 @@ export default function AddMealPage() {
               onChange={(e) =>
                 setForm({
                   ...form,
-                  description:
-                    e.target.value,
+                  description: e.target.value,
                 })
               }
               placeholder="Delicious spicy burger..."
@@ -182,11 +136,8 @@ export default function AddMealPage() {
 
           {/* PRICE + CATEGORY */}
           <div className="grid md:grid-cols-2 gap-5">
-
             <div className="space-y-2">
-              <label className="text-sm text-gray-500">
-                Price
-              </label>
+              <label className="text-sm text-gray-500">Price</label>
 
               <input
                 type="number"
@@ -194,8 +145,7 @@ export default function AddMealPage() {
                 onChange={(e) =>
                   setForm({
                     ...form,
-                    price:
-                      e.target.value,
+                    price: e.target.value,
                   })
                 }
                 placeholder="250"
@@ -204,58 +154,83 @@ export default function AddMealPage() {
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm text-gray-500">
-                Category
-              </label>
+              <label className="text-sm text-gray-500">Category</label>
 
               <select
-                value={
-                  form.categoryId
-                }
+                value={form.categoryId}
                 onChange={(e) =>
                   setForm({
                     ...form,
-                    categoryId:
-                      e.target.value,
+                    categoryId: e.target.value,
                   })
                 }
                 className="w-full p-4 rounded-2xl border dark:border-zinc-800 bg-transparent outline-none"
               >
-                <option value="">
-                  Select category
-                </option>
+                <option value="">Select category</option>
 
-                {categories.map(
-                  (category) => (
-                    <option
-                      key={
-                        category.id
-                      }
-                      value={
-                        category.id
-                      }
-                    >
-                      {category.name}
-                    </option>
-                  )
-                )}
+                {categories.map((category) => (
+                  <option key={category.id} value={category.id}>
+                    {category.name}
+                  </option>
+                ))}
               </select>
             </div>
           </div>
 
+          <div className="grid md:grid-cols-2 gap-5">
+            <select
+              value={form.cuisine}
+              onChange={(e) =>
+                setForm({
+                  ...form,
+                  cuisine: e.target.value,
+                })
+              }
+              className="w-full p-4 rounded-2xl border dark:border-zinc-800 bg-transparent"
+            >
+              <option value="">Select Cuisine</option>
+
+              <option value="Bangladeshi">Bangladeshi</option>
+
+              <option value="Chinese">Chinese</option>
+
+              <option value="Italian">Italian</option>
+
+              <option value="Indian">Indian</option>
+            </select>
+
+            <select
+              value={form.dietary}
+              onChange={(e) =>
+                setForm({
+                  ...form,
+                  dietary: e.target.value,
+                })
+              }
+              className="w-full p-4 rounded-2xl border dark:border-zinc-800 bg-transparent"
+            >
+              <option value="">Dietary Preference</option>
+
+              <option value="Halal">Halal</option>
+
+              <option value="Vegan">Vegan</option>
+
+              <option value="Vegetarian">Vegetarian</option>
+
+              <option value="Gluten Free">Gluten Free</option>
+            </select>
+          </div>
+
           {/* IMAGE */}
           <div className="space-y-2">
-            <label className="text-sm text-gray-500">
-              Image URL
-            </label>
+            <label className="text-sm text-gray-500">Image URL</label>
 
             <input
               value={form.imageUrl}
               onChange={(e) =>
                 setForm({
                   ...form,
-                  imageUrl:
-                    e.target.value,
+                  imageUrl: e.target.value,
                 })
               }
               placeholder="https://..."
@@ -278,9 +253,7 @@ export default function AddMealPage() {
             disabled={loading}
             className="w-full py-4 rounded-2xl bg-black text-white dark:bg-white dark:text-black font-medium hover:opacity-90 transition"
           >
-            {loading
-              ? "Creating Meal..."
-              : "Add Meal"}
+            {loading ? "Creating Meal..." : "Add Meal"}
           </button>
         </div>
       </section>
