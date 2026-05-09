@@ -176,10 +176,57 @@ export default function ProviderMealsPage() {
 
                   <span className="font-bold text-lg">৳{meal.price}</span>
                 </div>
+                <div className="flex flex-wrap gap-2">
+                  {meal.cuisine && (
+                    <span className="px-3 py-1 rounded-full bg-zinc-100 dark:bg-zinc-900 text-xs">
+                      {meal.cuisine}
+                    </span>
+                  )}
 
+                  {meal.dietary && (
+                    <span className="px-3 py-1 rounded-full bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300 text-xs">
+                      {meal.dietary}
+                    </span>
+                  )}
+                </div>
                 <p className="text-sm text-gray-500 line-clamp-3">
                   {meal.description}
                 </p>
+
+                {/* REVIEWS */}
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-1">
+                      <span className="text-yellow-500">★</span>
+
+                      <span className="font-semibold">
+                        {meal.averageRating
+                          ? meal.averageRating.toFixed(1)
+                          : "New"}
+                      </span>
+                    </div>
+
+                    <span className="text-sm text-gray-500">
+                      ({meal.reviewCount || 0} reviews)
+                    </span>
+                  </div>
+
+                  {meal.reviewCount > 0 && (
+                    <div className="flex -space-x-2">
+                      {meal.reviews?.slice(0, 3).map((review: any) => (
+                        <img
+                          key={review.id}
+                          src={
+                            review.customer?.image ||
+                            `https://ui-avatars.com/api/?name=${review.customer?.name}`
+                          }
+                          alt={review.customer?.name}
+                          className="w-8 h-8 rounded-full border-2 border-white dark:border-zinc-900 object-cover"
+                        />
+                      ))}
+                    </div>
+                  )}
+                </div>
 
                 {/* ACTIONS */}
                 <div className="flex gap-3">
