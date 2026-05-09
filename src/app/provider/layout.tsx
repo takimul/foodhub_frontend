@@ -67,6 +67,9 @@ export default function ProviderLayout({
             <Link href="/provider/orders">
               Orders
             </Link>
+            <Link href="/provider/profile">
+              Profile
+            </Link>
           </nav>
         </aside>
 
