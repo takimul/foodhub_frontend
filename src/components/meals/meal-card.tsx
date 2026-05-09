@@ -29,6 +29,19 @@ export default function MealCard({ meal }: { meal: Meal }) {
           <p className="text-sm text-gray-500 line-clamp-2">
             {meal.description}
           </p>
+          <div className="flex items-center gap-2 pt-1">
+            <div className="flex items-center gap-1 text-sm">
+              <span className="text-yellow-500">★</span>
+
+              <span className="font-medium">
+                {meal.averageRating ? meal.averageRating.toFixed(1) : "New"}
+              </span>
+            </div>
+
+            <span className="text-xs text-gray-400">
+              ({meal.reviewCount || 0} reviews)
+            </span>
+          </div>
 
           <div className="flex gap-2 flex-wrap">
             {meal.cuisine && (
