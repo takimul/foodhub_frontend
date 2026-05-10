@@ -23,9 +23,7 @@ export default function Navbar() {
   const [cartOpen, setCartOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
 
-  const totalItems = useCartStore((state) =>
-    state.totalItems()
-  );
+  const totalItems = useCartStore((state) => state.totalItems());
 
   useEffect(() => {
     setMounted(true);
@@ -40,24 +38,22 @@ export default function Navbar() {
         credentials: "include",
       });
 
+      window.dispatchEvent(new Event("auth-changed"));
+
       await refresh();
 
-      router.push("/login");
+      router.replace("/login");
       router.refresh();
 
     } finally {
       setLoading(false);
     }
   };
-   const RoleButton = () => {
-     if (
-      user?.role === "CUSTOMER"
-    ) {
-      return <BecomeProviderButton />;
-    }
-     if (
-      user?.role === "PROVIDER"
-    ) {
+  const RoleButton = () => {
+    // if (user?.role === "CUSTOMER") {
+    //   return <BecomeProviderButton />;
+    // }
+    if (user?.role === "PROVIDER") {
       return (
         <Link
           href="/provider/dashboard"
@@ -67,9 +63,7 @@ export default function Navbar() {
         </Link>
       );
     }
-     if (
-      user?.role === "ADMIN"
-    ) {
+    if (user?.role === "ADMIN") {
       return (
         <Link
           href="/admin/dashboard"
@@ -86,24 +80,15 @@ export default function Navbar() {
   return (
     <>
       <nav className="sticky top-0 z-50 bg-white/80 dark:bg-black/80 backdrop-blur-xl border-b dark:border-zinc-800">
-
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-
           {/* LOGO */}
-          <Link
-            href="/"
-            className="text-2xl font-bold"
-          >
+          <Link href="/" className="text-2xl font-bold">
             FoodHub
           </Link>
 
           {/* DESKTOP */}
           <div className="hidden md:flex items-center gap-5">
-
-            <Link
-              href="/"
-              className="text-sm hover:text-orange-500 transition"
-            >
+            <Link href="/" className="text-sm hover:text-orange-500 transition">
               Home
             </Link>
 
@@ -118,19 +103,16 @@ export default function Navbar() {
 
             {/* CART */}
             <button
-              onClick={() =>
-                setCartOpen(true)
-              }
+              onClick={() => setCartOpen(true)}
               className="relative text-2xl"
             >
               <CiShoppingCart />
 
-              {mounted &&
-                totalItems > 0 && (
-                  <span className="absolute -top-2 -right-2 text-xs bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center">
-                    {totalItems}
-                  </span>
-                )}
+              {mounted && totalItems > 0 && (
+                <span className="absolute -top-2 -right-2 text-xs bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center">
+                  {totalItems}
+                </span>
+              )}
             </button>
 
             <ThemeToggle />
@@ -138,7 +120,6 @@ export default function Navbar() {
             {/* AUTH */}
             {user ? (
               <div className="flex items-center gap-3">
-
                 <RoleButton />
 
                 <span className="text-sm text-gray-500 max-w-[160px] truncate">
@@ -150,14 +131,11 @@ export default function Navbar() {
                   disabled={loading}
                   className="px-4 py-2 rounded-xl bg-black text-white dark:bg-white dark:text-black hover:opacity-90 transition"
                 >
-                  {loading
-                    ? "..."
-                    : "Logout"}
+                  {loading ? "..." : "Logout"}
                 </button>
               </div>
             ) : (
               <div className="flex items-center gap-3">
-
                 <Link
                   href="/login"
                   className="px-4 py-2 rounded-xl border dark:border-zinc-700"
@@ -176,17 +154,8 @@ export default function Navbar() {
           </div>
 
           {/* MOBILE BUTTON */}
-          <button
-            onClick={() =>
-              setOpen(!open)
-            }
-            className="md:hidden"
-          >
-            {open ? (
-              <X size={26} />
-            ) : (
-              <Menu size={26} />
-            )}
+          <button onClick={() => setOpen(!open)} className="md:hidden">
+            {open ? <X size={26} /> : <Menu size={26} />}
           </button>
         </div>
 
@@ -209,23 +178,12 @@ export default function Navbar() {
               className="md:hidden border-t dark:border-zinc-800 bg-white dark:bg-black"
             >
               <div className="px-6 py-6 flex flex-col gap-5">
-
-                <Link
-                  href="/"
-                  onClick={() =>
-                    setOpen(false)
-                  }
-                >
+                <Link href="/" onClick={() => setOpen(false)}>
                   Home
                 </Link>
 
                 {user && (
-                  <Link
-                    href="/orders"
-                    onClick={() =>
-                      setOpen(false)
-                    }
-                  >
+                  <Link href="/orders" onClick={() => setOpen(false)}>
                     Orders
                   </Link>
                 )}
@@ -242,9 +200,7 @@ export default function Navbar() {
 
                   <span>
                     Cart
-                    {mounted &&
-                      totalItems > 0 &&
-                      ` (${totalItems})`}
+                    {mounted && totalItems > 0 && ` (${totalItems})`}
                   </span>
                 </button>
 
@@ -252,11 +208,7 @@ export default function Navbar() {
 
                 {/* ROLE BUTTON */}
                 {user && (
-                  <div
-                    onClick={() =>
-                      setOpen(false)
-                    }
-                  >
+                  <div onClick={() => setOpen(false)}>
                     <RoleButton />
                   </div>
                 )}
@@ -273,19 +225,14 @@ export default function Navbar() {
                       disabled={loading}
                       className="w-fit px-4 py-2 rounded-xl bg-black text-white dark:bg-white dark:text-black"
                     >
-                      {loading
-                        ? "..."
-                        : "Logout"}
+                      {loading ? "..." : "Logout"}
                     </button>
                   </>
                 ) : (
                   <div className="flex flex-col gap-3">
-
                     <Link
                       href="/login"
-                      onClick={() =>
-                        setOpen(false)
-                      }
+                      onClick={() => setOpen(false)}
                       className="px-4 py-2 rounded-xl border dark:border-zinc-700 text-center"
                     >
                       Login
@@ -293,9 +240,7 @@ export default function Navbar() {
 
                     <Link
                       href="/register"
-                      onClick={() =>
-                        setOpen(false)
-                      }
+                      onClick={() => setOpen(false)}
                       className="px-4 py-2 rounded-xl bg-black text-white dark:bg-white dark:text-black text-center"
                     >
                       Register
@@ -309,12 +254,7 @@ export default function Navbar() {
       </nav>
 
       {/* CART DRAWER */}
-      <CartDrawer
-        open={cartOpen}
-        onClose={() =>
-          setCartOpen(false)
-        }
-      />
+      <CartDrawer open={cartOpen} onClose={() => setCartOpen(false)} />
     </>
   );
 }

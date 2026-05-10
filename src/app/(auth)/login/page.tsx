@@ -14,7 +14,6 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  
   useEffect(() => {
     if (!authLoading && user) {
       router.push("/");
@@ -30,16 +29,15 @@ export default function LoginPage() {
         method: "POST",
         credentials: "include",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email, password })
+        body: JSON.stringify({ email, password }),
       });
 
       if (!res.ok) throw new Error("Invalid credentials");
-
+      window.dispatchEvent(new Event("auth-changed"));
       router.push("/");
       router.refresh();
-
     } catch (err: any) {
       setError(err.message);
     } finally {
